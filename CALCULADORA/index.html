@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Binária</title>
+    <style>
+        body {
+            background: linear-gradient(to right, #4a0202, #950000f0);
+            color: rgb(255, 255, 255);
+            font-family: Arial, sans-serif;
+        }
+        .calculator {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(to right, #250707, #aa0000f0);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgb(0, 0, 0);
+        }
+        h2, h3 {
+            text-align: center;
+        }
+        label, select, button, span {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+        }
+        select, button {
+            padding: 10px;
+            background: linear-gradient(to right, #950000, #ff0000f0); /* Vermelho */
+            color: rgb(0, 0, 0);
+            border: none;
+            border-radius: 20px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background: linear-gradient(to right, #480000, #500202); /* Vermelho claro */
+        }
+        #result {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h2>CALCULADORA BINÁRIA</h2>
+        <label for="operation">Escolha uma operação:</label>
+        <select id="operation">
+            <option value="decimalToBinary">Decimal / Binário</option>
+            <option value="binaryToDecimal">Binário / Decimal</option>
+            <option value="addBinary">Adicionar </option>
+            <option value="subtractBinary">Subtrair</option>
+            <option value="multiplyBinary">Multiplicar</option>
+            <option value="divideBinary">Dividir</option>
+            <option value="toTwosComplement">Complemento de Dois</option>
+            <option value="toHexadecimal">Binário / Hexadecimal</option>
+            <option value="toOctal">Binário / Octal</option>
+        </select>
+        
+        <div id="inputFields"></div>
+        
+        <button id="calculateButton">Calcular</button>
+        
+        <h3>Resultado: <span id="result"></span></h3>
+    </div>
+
+    <script>
+        document.getElementById('operation').addEventListener('change', createInputFields);
+        document.getElementById('calculateButton').addEventListener('click', calculate);
+
+        function createInputFields() {
+            const inputFields = document.getElementById('inputFields');
+            inputFields.innerHTML = '';
+            const operation = document.getElementById('operation').value;
+
+            if (operation === 'decimalToBinary' || operation === 'toTwosComplement' || operation === 'toHexadecimal' || operation === 'toOctal') {
+                inputFields.innerHTML += '<label for="input1">Entrada:</label>';
+                inputFields.innerHTML += '<input type="text" id="input1">';
+            } else {
+                inputFields.innerHTML += '<label for="input1">Entrada 1:</label>';
+                inputFields.innerHTML += '<input type="text" id="input1">';
+                inputFields.innerHTML += '<label for="input2">Entrada 2:</label>';
+                inputFields.innerHTML += '<input type="text" id="input2">';
+            }
+        }
+
+        function calculate() {
+            const operation = document.getElementById('operation').value;
+            const input1 = document.getElementById('input1').value;
+            const input2 = document.getElementById('input2') ? document.getElementById('input2').value : null;
+            let result = '';
+
+            switch (operation) {
+                case 'decimalToBinary':
+                    result = decimalToBinary(parseInt(input1));
+                    break;
+                case 'binaryToDecimal':
+                    result = binaryToDecimal(input1);
+                    break;
+                case 'addBinary':
+                    result = addBinary(input1, input2);
+                    break;
+                case 'subtractBinary':
+                    result = subtractBinary(input1, input2);
+                    break;
+                case 'multiplyBinary':
+                    result = multiplyBinary(input1, input2);
+                    break;
+                case 'divideBinary':
+                    result = divideBinary(input1, input2);
+                    break;
+                case 'toTwosComplement':
+                    result = toTwosComplement(input1);
+                    break;
+                case 'toHexadecimal':
+                    result = binaryToHexadecimal(input1);
+                    break;
+                case 'toOctal':
+                    result = binaryToOctal(input1);
+                    break;
+            }
+
+            document.getElementById('result').textContent = result;
+        }
+
+        function decimalToBinary(decimal) {
+            return (decimal >>> 0).toString(2).padStart(8, '0');
+        }
+
+        function binaryToDecimal(binary) {
+            return parseInt(binary, 2);
+        }
+
+        function addBinary(bin1, bin2) {
+            let sum = (parseInt(bin1, 2) + parseInt(bin2, 2)).toString(2);
+            return sum.padStart(8, '0');
+        }
+
+        function subtractBinary(bin1, bin2) {
+            let difference = (parseInt(bin1, 2) - parseInt(bin2, 2)).toString(2);
+            return difference.padStart(8, '0');
+        }
+
+        function multiplyBinary(bin1, bin2) {
+            let product = (parseInt(bin1, 2) * parseInt(bin2, 2)).toString(2);
+            return product.padStart(8, '0');
+        }
+
+        function divideBinary(bin1, bin2) {
+            let quotient = Math.floor(parseInt(bin1, 2) / parseInt(bin2, 2)).toString(2);
+            return quotient.padStart(8, '0');
+        }
+
+        function toTwosComplement(binary) {
+            let inverted = '';
+            for (let i = 0; i < binary.length; i++) {
+                inverted += binary[i] === '0' ? '1' : '0';
+            }
+            return addBinary(inverted, '1').slice(-8);
+        }
+
+        function binaryToHexadecimal(binary) {
+            return parseInt(binary, 2).toString(16).toUpperCase();
+        }
+
+        function binaryToOctal(binary) {
+            return parseInt(binary, 2).toString(8);
+        }
+    </script>
+</body>
+</html>
